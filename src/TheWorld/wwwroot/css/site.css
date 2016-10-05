@@ -12,7 +12,7 @@ label {
 input[type=text], input[type=password], textarea {
 	width: 150px;
 }
-*/
+
 
 #main {
 	background-color: #eee;
@@ -28,7 +28,7 @@ input[type=text], input[type=password], textarea {
 	bottom:0;
 	width: 100%;
 }
-
+*/
 .headshot {
 	max-width: 50px;
 	border: 1px solid #222;
