@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
+using TheWorld.Models;
 using TheWorld.Services;
 
 namespace TheWorld
@@ -45,6 +46,14 @@ namespace TheWorld
 				// Implement a real Mail Service
 			}
 
+			services.AddDbContext<WorldContext>();
+
+			services.AddScoped<IWorldRepository, WorldRepository>();
+
+			services.AddTransient<WorldContextSeedData>();
+
+			services.AddLogging();
+
         	services.AddMvc();
         }
 
@@ -67,11 +76,19 @@ namespace TheWorld
 //         });
 //        }
 
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+		public void Configure(IApplicationBuilder app, 
+			IHostingEnvironment env,
+			WorldContextSeedData seeder,
+			ILoggerFactory factory)
 		{
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
+				factory.AddDebug(LogLevel.Information);
+			}
+			else
+			{
+				factory.AddDebug(LogLevel.Error);
 			}
 			app.UseStaticFiles();
 
@@ -83,6 +100,7 @@ namespace TheWorld
 							defaults: new {controller = "App", action = "Index" }
 							);
 					});
+			seeder.EnsureSeedData().Wait();
 		}
     }
 }
